@@ -10,8 +10,8 @@ using _2organize.Data;
 namespace _2organize.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220122191432_test")]
-    partial class test
+    [Migration("20220123055010_AjoutTimeSlot")]
+    partial class AjoutTimeSlot
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -221,6 +221,76 @@ namespace _2organize.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("_2organize.Models.AssignedTask", b =>
+                {
+                    b.Property<int>("AssignedTaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Done")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("HomeTaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ResponsiblePersionUserExtensionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TimeSlotId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AssignedTaskId");
+
+                    b.HasIndex("HomeTaskId");
+
+                    b.HasIndex("ResponsiblePersionUserExtensionId");
+
+                    b.HasIndex("TimeSlotId");
+
+                    b.ToTable("AssignedTasks");
+                });
+
+            modelBuilder.Entity("_2organize.Models.Disponibility", b =>
+                {
+                    b.Property<int>("DisponibilityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsPeriodic")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("TimeSlotId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserExtensionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DisponibilityId");
+
+                    b.HasIndex("TimeSlotId");
+
+                    b.HasIndex("UserExtensionId");
+
+                    b.ToTable("Disponibilities");
+                });
+
+            modelBuilder.Entity("_2organize.Models.Family", b =>
+                {
+                    b.Property<int>("FamilyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FamilyId");
+
+                    b.ToTable("Families");
+                });
+
             modelBuilder.Entity("_2organize.Models.HomeTask", b =>
                 {
                     b.Property<int>("HomeTaskId")
@@ -234,6 +304,50 @@ namespace _2organize.Data.Migrations
                     b.HasKey("HomeTaskId");
 
                     b.ToTable("HomeTasks");
+                });
+
+            modelBuilder.Entity("_2organize.Models.TimeSlot", b =>
+                {
+                    b.Property<int>("TimeSlotId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("TimeSlotId");
+
+                    b.ToTable("TimeSlot");
+                });
+
+            modelBuilder.Entity("_2organize.Models.UserExtension", b =>
+                {
+                    b.Property<int>("UserExtensionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FamilyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserExtensionId");
+
+                    b.HasIndex("FamilyId");
+
+                    b.ToTable("UserExtensions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -285,6 +399,39 @@ namespace _2organize.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("_2organize.Models.AssignedTask", b =>
+                {
+                    b.HasOne("_2organize.Models.HomeTask", "HomeTask")
+                        .WithMany()
+                        .HasForeignKey("HomeTaskId");
+
+                    b.HasOne("_2organize.Models.UserExtension", "ResponsiblePersion")
+                        .WithMany()
+                        .HasForeignKey("ResponsiblePersionUserExtensionId");
+
+                    b.HasOne("_2organize.Models.TimeSlot", "TimeSlot")
+                        .WithMany()
+                        .HasForeignKey("TimeSlotId");
+                });
+
+            modelBuilder.Entity("_2organize.Models.Disponibility", b =>
+                {
+                    b.HasOne("_2organize.Models.TimeSlot", "TimeSlot")
+                        .WithMany()
+                        .HasForeignKey("TimeSlotId");
+
+                    b.HasOne("_2organize.Models.UserExtension", "User")
+                        .WithMany()
+                        .HasForeignKey("UserExtensionId");
+                });
+
+            modelBuilder.Entity("_2organize.Models.UserExtension", b =>
+                {
+                    b.HasOne("_2organize.Models.Family", "Family")
+                        .WithMany()
+                        .HasForeignKey("FamilyId");
                 });
 #pragma warning restore 612, 618
         }

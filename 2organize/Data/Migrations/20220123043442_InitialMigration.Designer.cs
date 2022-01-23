@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _2organize.Data;
 
 namespace _2organize.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220123043442_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,16 +237,11 @@ namespace _2organize.Data.Migrations
                     b.Property<int?>("ResponsiblePersionUserExtensionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TimeSlotId")
-                        .HasColumnType("int");
-
                     b.HasKey("AssignedTaskId");
 
                     b.HasIndex("HomeTaskId");
 
                     b.HasIndex("ResponsiblePersionUserExtensionId");
-
-                    b.HasIndex("TimeSlotId");
 
                     b.ToTable("AssignedTasks");
                 });
@@ -259,15 +256,10 @@ namespace _2organize.Data.Migrations
                     b.Property<bool>("IsPeriodic")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("TimeSlotId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UserExtensionId")
                         .HasColumnType("int");
 
                     b.HasKey("DisponibilityId");
-
-                    b.HasIndex("TimeSlotId");
 
                     b.HasIndex("UserExtensionId");
 
@@ -302,24 +294,6 @@ namespace _2organize.Data.Migrations
                     b.HasKey("HomeTaskId");
 
                     b.ToTable("HomeTasks");
-                });
-
-            modelBuilder.Entity("_2organize.Models.TimeSlot", b =>
-                {
-                    b.Property<int>("TimeSlotId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("TimeSlotId");
-
-                    b.ToTable("TimeSlot");
                 });
 
             modelBuilder.Entity("_2organize.Models.UserExtension", b =>
@@ -408,18 +382,10 @@ namespace _2organize.Data.Migrations
                     b.HasOne("_2organize.Models.UserExtension", "ResponsiblePersion")
                         .WithMany()
                         .HasForeignKey("ResponsiblePersionUserExtensionId");
-
-                    b.HasOne("_2organize.Models.TimeSlot", "TimeSlot")
-                        .WithMany()
-                        .HasForeignKey("TimeSlotId");
                 });
 
             modelBuilder.Entity("_2organize.Models.Disponibility", b =>
                 {
-                    b.HasOne("_2organize.Models.TimeSlot", "TimeSlot")
-                        .WithMany()
-                        .HasForeignKey("TimeSlotId");
-
                     b.HasOne("_2organize.Models.UserExtension", "User")
                         .WithMany()
                         .HasForeignKey("UserExtensionId");
